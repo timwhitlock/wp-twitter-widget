@@ -1,6 +1,4 @@
-# Latest Tweets Widget Wordpress Plugin
-
-### Connect your Twitter account to this plugin and the widget will display your latest tweets on your site.
+# Latest Tweets Wordpress Widget
 
 Gitified version of the Latest Tweets Widget published in the official Wordpress plugin directory:  
 [http://wordpress.org/plugins/latest-tweets-widget/](http://wordpress.org/plugins/latest-tweets-widget/)
