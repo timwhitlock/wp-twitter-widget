@@ -21,7 +21,7 @@ Built by <a href="//twitter.com/timwhitlock">@timwhitlock</a> / <a rel="author" 
 
 The underlying Twitter API library is [available on Github](https://github.com/timwhitlock/wp-twitter-api)
 
-Also by this author: [Loco Translate](http://wordpress.org/support/plugin/loco-translate)
+Also by this author: [Loco Translate](http://wordpress.org/plugins/loco-translate/)
 
 
 == Installation ==
