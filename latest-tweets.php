@@ -101,6 +101,11 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats ){
                 $date = esc_html( twitter_api_relative_date($time) );
                 $date = '<time datetime="'.date_i18n( 'Y-m-d H:i:sO', $time ).'">'.$date.'</time>';
             }
+            // handle original retweet text as RT may be truncated
+            if( $include_rts && isset($retweeted_status) && preg_match('/^RT\s+@[a-z0-9_]{1,15}[\s:]+/i', $text, $prefix ) ){
+                $text = $prefix[0].$retweeted_status['text'];
+                unset($retweeted_status);
+            }
             // render and linkify tweet, unless theme overrides with filter
             $html = apply_filters('latest_tweets_render_text', $text );
             if( $html === $text ){

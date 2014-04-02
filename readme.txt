@@ -76,6 +76,7 @@ Do so at your own risk.
 == Changelog ==
 
 = 1.1.0 =
+* Handling of truncated retweets
 * Restructured library directory
 * More friendly front end error when not configured
 * Caching disabled in debug mode
