@@ -18,7 +18,7 @@ Author URI: http://timwhitlock.info/
  * @param bool whether to show at replies
  * @return array blocks of html expected by the widget
  */
-function latest_tweets_render( $screen_name, $count, $rts, $ats ){
+function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
     try {
         if( ! function_exists('twitter_api_get') ){
             require_once dirname(__FILE__).'/api/twitter-api.php';
@@ -48,7 +48,7 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats ){
         $params = compact('exclude_replies','include_rts','trim_user','screen_name');
         // Stripping tweets means we may get less than $count tweets.
         // we'll keep going until we get the amount we need, but may as well get more each time.
-        if( $exclude_replies || ! $include_rts ){
+        if( $exclude_replies || ! $include_rts || $pop ){
             $params['count'] = $count * 3;
         }
         // else ensure we always get more than one to avoid infinite loop on max_id bug
@@ -67,6 +67,10 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats ){
                 $max_id = $tweet['id_str'];
                 if( ! $include_rts && preg_match('/^(?:RT|MT)[ :\-]*@/i', $tweet['text']) ){
                     // skipping manual RT
+                    continue;
+                }
+                if( $pop > ( $tweet['retweet_count'] + $tweet['favorite_count'] ) ){
+                    // skipping tweets not deemed popular enough
                     continue;
                 }
                 $tweets[] = $tweet;
@@ -158,8 +162,8 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats ){
  * @param bool $ats Whether to show 'at' replies, defaults to true
  * @return string HTML <div> element containing a list
  */
-function latest_tweets_render_html( $screen_name = '', $num = 5, $rts = true, $ats = true ){
-    $items = latest_tweets_render( $screen_name, $num, $rts, $ats );
+function latest_tweets_render_html( $screen_name = '', $num = 5, $rts = true, $ats = true, $pop = 0 ){
+    $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop );
     $list  = apply_filters('latest_tweets_render_list', $items, $screen_name );
     if( is_array($list) ){
         $list = '<ul><li>'.implode('</li><li>',$items).'</li></ul>';
@@ -199,7 +203,12 @@ class Latest_Tweets_Widget extends WP_Widget {
             array (
                 'name'  => 'num',
                 'label' => __('Number of tweets','twitter-api'),
-                'type'  => 'text'
+                'type'  => 'number'
+            ),
+            array (
+                'name'  => 'pop',
+                'label' => __('Minimum popularity','twitter-api'),
+                'type'  => 'number'
             ),
             array (
                 'name'  => 'rts',
@@ -224,7 +233,8 @@ class Latest_Tweets_Widget extends WP_Widget {
         $instance += array (
             'title' => __('Latest Tweets','twitter-api'),
             'screen_name' => '',
-            'num' => '5',
+            'num' => 5,
+            'pop' => 0,
             'rts' => '',
             'ats' => '',
         );
@@ -245,7 +255,7 @@ class Latest_Tweets_Widget extends WP_Widget {
             }
             else {
                 $attrs = '';
-                echo '<p>'.$label.'<br /><input class="widefat" type="text" value="'.esc_attr($value).'" id="'.$elmid.'" name="'.$fname.'" /></p>';
+                echo '<p>'.$label.'<br /><input class="widefat" type="',$val['type'],'" value="'.esc_attr($value).'" id="'.$elmid.'" name="'.$fname.'" /></p>';
             }
         }
     }
@@ -256,7 +266,7 @@ class Latest_Tweets_Widget extends WP_Widget {
         // title is themed via Wordpress widget theming techniques
         $title = $args['before_title'] . apply_filters('widget_title', $title, $instance, $this->id_base ) . $args['after_title'];
         // by default tweets are rendered as an unordered list
-        $items = latest_tweets_render( $screen_name, $num, $rts, $ats );
+        $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop );
         $list  = apply_filters('latest_tweets_render_list', $items, $screen_name );
         if( is_array($list) ){
             $list = '<ul><li>'.implode('</li><li>',$items).'</li></ul>';
