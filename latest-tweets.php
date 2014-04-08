@@ -48,13 +48,16 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
         $params = compact('exclude_replies','include_rts','trim_user','screen_name');
         // Stripping tweets means we may get less than $count tweets.
         // we'll keep going until we get the amount we need, but may as well get more each time.
-        if( $exclude_replies || ! $include_rts || $pop ){
-            $params['count'] = $count * 3;
+        $params['count'] = $count;
+        if( $exclude_replies || ! $include_rts ){
+            $params['count'] *= 3;
+        }
+        // getting only popular tweets may mean fetching even more
+        if( $pop ){
+            $params['count'] *= $pop;
         }
         // else ensure we always get more than one to avoid infinite loop on max_id bug
-        else {
-            $params['count'] = max( 2, $count );
-        }
+        $params['count'] = max( 2, $params['count'] );
         // pull tweets until we either have enough, or there are no more
         $tweets = array();
         while( $batch = twitter_api_get('statuses/user_timeline', $params ) ){
