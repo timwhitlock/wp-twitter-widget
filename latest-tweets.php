@@ -4,7 +4,7 @@ Plugin Name: Latest Tweets Widget
 Plugin URI: http://wordpress.org/extend/plugins/latest-tweets-widget/
 Description: Provides a sidebar widget showing latest tweets - compatible with the new Twitter API 1.1
 Author: Tim Whitlock
-Version: 1.1.0
+Version: 1.1.1
 Author URI: http://timwhitlock.info/
 */
 
@@ -90,6 +90,8 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
         if( $os_timezone !== $wp_timezone ){
             date_default_timezone_set( $wp_timezone );
         }
+        // Let theme disable or override emoji rendering
+        $emoji_callback = apply_filters('latest_tweets_emoji_callback', 'twitter_api_replace_emoji_callback' );
         // render each tweet as a block of html for the widget list items
         $rendered = array();
         foreach( $tweets as $tweet ){
@@ -115,10 +117,6 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
                 if( ! function_exists('twitter_api_html') ){
                     twitter_api_include('utils');
                 }
-                // strip characters that will choke Wordpress cache.
-                if( $cachettl && ! TWITTER_CACHE_APC ){
-                    $text = twitter_api_strip_emoji( $text );
-                }
                 // htmlify tweet, using entities if we can
                 if( isset($entities) && is_array($entities) ){
                     $html = twitter_api_html_with_entities( $text, $entities );
@@ -126,6 +124,14 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
                 }
                 else {
                     $html = twitter_api_html( $text );
+                }
+                // render emoji, unless filtered out
+                if( $emoji_callback ){
+                    $html = twitter_api_replace_emoji( $html, $emoji_callback );
+                }
+                // strip characters that will choke mysql cache.
+                if( $cachettl && ! TWITTER_CACHE_APC ){
+                    $html = twitter_api_strip_quadruple_bytes( $html );
                 }
             }
             // piece together the whole tweet, allowing override

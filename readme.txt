@@ -4,7 +4,7 @@ Donate link: http://timwhitlock.info/donate-to-a-project/
 Tags: twitter, tweets, oauth, api, rest, api, widget, sidebar
 Requires at least: 3.5.1
 Tested up to: 3.9
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,10 @@ If you're unable too fix your [PHP cURL](https://php.net/manual/en/book.curl.php
 `add_filter('https_ssl_verify', '__return_false');`  
 Do so at your own risk.
 
+= Does this plugin show Emoji images in tweets? =
+
+Yes, as of version 1.1.1 Emojis are rendered the same as on twitter.com. See the [Other Notes](http://wordpress.org/plugins/latest-tweets-widget/other_notes/) section for how to disable Emoji.
+
 
 == Screenshots ==
 
@@ -80,6 +84,9 @@ Do so at your own risk.
 2. Admin screen shows Twitter connect button and OAuth settings
 
 == Changelog ==
+
+= 1.1.1 =
+* Added emoji support
 
 = 1.1.0 =
 * Handling of truncated retweets
@@ -153,8 +160,8 @@ Do so at your own risk.
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-* Bug fixes and improvements available.
+= 1.1.1 =
+* Now supports Emoji rendering.
 
 
 == Shortcodes ==
@@ -197,6 +204,9 @@ Tweets are rendered as a list which has various hooks you can use. Here's a roug
     }
     .latest-tweets .tweet-text a {
        /* style links, hashtags and mentions */
+    }
+    .latest-tweets .tweet-text .emoji {
+      /* style embedded emoji image in tweet */ 
     }
     .latest-tweets .tweet-details {
       /* style datetime and link under tweet */
@@ -255,6 +265,22 @@ This would disable the cache (not recommended other than for debugging):
     }, 10, 1 );
 
 
+== Emoji ==
+
+If you want to disable Emoji image replacement, you can filter the replacement callback function to something empty, e.g:
+
+    add_filter('latest_tweets_emoji_callback', function( $func ){
+        return '';
+    } );
+
+- or to strip Emoji characters from all tweets, return your own replacement function that returns something else, e.g:
+
+    add_filter('latest_tweets_emoji_callback', function( $func ){
+        return function( array $match ){
+            return '<!-- removed emoji -->';
+        };
+    } );
+
 
 == Credits ==
 
@@ -263,4 +289,6 @@ Screenshot taken with permission from http://stayingalivefoundation.org/blog
 == Notes ==
 
 Be aware of [Twitter's display requirements](https://dev.twitter.com/terms/display-requirements) when rendering tweets on your website.
+
+Example code here uses PHP [closures](http://www.php.net/manual/en/class.closure.php) which require PHP>=5.3.0 and won't work on older systems.
 
