@@ -4,7 +4,7 @@ Donate link: http://timwhitlock.info/donate-to-a-project/
 Tags: twitter, tweets, oauth, api, rest, api, widget, sidebar
 Requires at least: 3.5.1
 Tested up to: 3.9
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,7 +75,7 @@ Do so at your own risk.
 
 = Does this plugin show Emoji images in tweets? =
 
-Yes, as of version 1.1.1 Emojis are rendered the same as on twitter.com. See the [Other Notes](http://wordpress.org/plugins/latest-tweets-widget/other_notes/) section for how to disable Emoji.
+Yes, as of version 1.1.2 Emojis are rendered the same as on twitter.com. See the [Other Notes](http://wordpress.org/plugins/latest-tweets-widget/other_notes/) section for how to disable Emoji.
 
 
 == Screenshots ==
@@ -85,8 +85,11 @@ Yes, as of version 1.1.1 Emojis are rendered the same as on twitter.com. See the
 
 == Changelog ==
 
+= 1.1.2 =
+* Added Emoji image rendering
+
 = 1.1.1 =
-* Added emoji support
+* broken release, don't use.
 
 = 1.1.0 =
 * Handling of truncated retweets
@@ -160,7 +163,7 @@ Yes, as of version 1.1.1 Emojis are rendered the same as on twitter.com. See the
 
 == Upgrade Notice ==
 
-= 1.1.1 =
+= 1.1.2 =
 * Now supports Emoji rendering.
 
 
