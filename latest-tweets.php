@@ -6,6 +6,8 @@ Description: Provides a sidebar widget showing latest tweets - compatible with t
 Author: Tim Whitlock
 Version: 1.1.3
 Author URI: http://timwhitlock.info/
+Text Domain: twitter-api
+Domain Path: /api/lang/
 */
 
 
