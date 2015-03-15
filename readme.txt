@@ -4,7 +4,7 @@ Donate link: http://timwhitlock.info/donate-to-a-project/
 Tags: twitter, tweets, oauth, api, rest, api, widget, sidebar
 Requires at least: 3.5.1
 Tested up to: 4.1.1
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -293,6 +293,14 @@ If you want to disable Emoji image replacement, you can filter the replacement c
 == Credits ==
 
 Screenshot taken with permission from http://stayingalivefoundation.org/blog
+
+
+* Portuguese translations by [Leandro Dimitrio](http://wordpress.org/support/profile/leandrodimitrio)
+* German translations by [Florian Felsing](https://twitter.com/FlorianFelsing) and [David Noh](http://wordpress.org/support/profile/david_noh)
+* Russian translations by [Andrey Yakovenko](https://twitter.com/YakovenkoAndrey)
+* Dutch translations by [Daniel Wichers](https://twitter.com/dwichers)
+* Spanish translations by [Pedro Pica](http://minimizo.com)
+
 
 == Notes ==
 
