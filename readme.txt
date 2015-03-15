@@ -3,7 +3,7 @@ Contributors: timwhitlock
 Donate link: http://timwhitlock.info/donate-to-a-project/
 Tags: twitter, tweets, oauth, api, rest, api, widget, sidebar
 Requires at least: 3.5.1
-Tested up to: 3.9.2
+Tested up to: 4.1.1
 Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,8 @@ Yes, as of version 1.1.2 Emojis are rendered the same as on twitter.com. See the
 
 = 1.1.3 =
 * Query string encoding fix
+* Added Spanish translations
+* Fixed missing text domain in date utils 
 
 = 1.1.2 =
 * Added Emoji image rendering

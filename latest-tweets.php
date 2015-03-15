@@ -319,7 +319,7 @@ if( is_admin() ){
     // extra visibility of API settings link
     function latest_tweets_plugin_row_meta( $links, $file ){
         if( false !== strpos($file,'/latest-tweets.php') ){
-            $links[] = '<a href="options-general.php?page=twitter-api-admin"><strong>'.esc_attr__('Connect to Twitter').'</strong></a>';
+            $links[] = '<a href="options-general.php?page=twitter-api-admin"><strong>'.esc_attr__('Connect to Twitter','twitter-api').'</strong></a>';
         } 
         return $links;
     }
