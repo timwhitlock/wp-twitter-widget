@@ -22,10 +22,16 @@ Domain Path: /api/lang/
  */
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
     try {
+        if( ! function_exists('hello') ){
+            require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+            $loklak = new Loklak();
+        }
+
         if( ! function_exists('twitter_api_get') ){
-            require_once dirname(__FILE__).'/api/twitter-api.php';
+            require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
             twitter_api_load_textdomain();
         }
+
         // caching full data set, not just twitter api caching
         // caching is disabled by default in debug mode, but still filtered.
         $cachettl = (int) apply_filters('latest_tweets_cache_seconds', WP_DEBUG ? 0 : 300 );
@@ -192,8 +198,14 @@ class Latest_Tweets_Widget extends WP_Widget {
     
     /** @see WP_Widget::__construct */
     public function __construct( $id_base = false, $name = '', $widget_options = array(), $control_options = array() ){
+
+        if( ! function_exists('hello') ){
+            require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+            $loklak = new Loklak();
+        }
+
         if( ! function_exists('twitter_api_load_textdomain') ){
-            require_once dirname(__FILE__).'/api/twitter-api.php';
+            require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
         }
         twitter_api_load_textdomain();
         $this->options = array(
@@ -287,7 +299,7 @@ class Latest_Tweets_Widget extends WP_Widget {
                 $list,
                 apply_filters( 'latest_tweets_render_after', '' ),
             '</div>',
-         $args['after_widget'];
+        $args['after_widget'];
     }
     
 }
@@ -313,8 +325,14 @@ add_shortcode( 'tweets', 'lastest_tweets_shortcode' );
 
 
 if( is_admin() ){
+
+    if( ! function_exists('hello') ){
+        require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+        $loklak = new Loklak();
+    }
+
     if( ! function_exists('twitter_api_get') ){
-        require_once dirname(__FILE__).'/api/twitter-api.php';
+        require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
     }
     // extra visibility of API settings link
     function latest_tweets_plugin_row_meta( $links, $file ){
