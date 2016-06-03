@@ -23,7 +23,7 @@ Domain Path: /api/lang/
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
     try {
         if( ! function_exists('hello') ){
-            require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+            require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
             $loklak = new Loklak();
         }
 
@@ -200,7 +200,7 @@ class Latest_Tweets_Widget extends WP_Widget {
     public function __construct( $id_base = false, $name = '', $widget_options = array(), $control_options = array() ){
 
         if( ! function_exists('hello') ){
-            require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+            require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
             $loklak = new Loklak();
         }
 
@@ -333,7 +333,7 @@ add_shortcode( 'tweets', 'lastest_tweets_shortcode' );
 if( is_admin() ){
 
     if( ! function_exists('hello') ){
-        require_once dirname(__FILE__).'/api/loklak_php_api/loklak.php';
+        require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
         $loklak = new Loklak();
     }
 
