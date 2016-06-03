@@ -239,6 +239,11 @@ class Latest_Tweets_Widget extends WP_Widget {
                 'label' => __('Show Replies','twitter-api'),
                 'type'  => 'bool'
             ),
+            array (
+                'name'  => 'loklak',
+                'label' => __('Use Loklak API instead','twitter-api'),
+                'type'  => 'bool'
+            ),
         );
         $name or $name = __('Latest Tweets','twitter-api');
         parent::__construct( $id_base, $name, $widget_options, $control_options );  
@@ -256,6 +261,7 @@ class Latest_Tweets_Widget extends WP_Widget {
             'pop' => 0,
             'rts' => '',
             'ats' => '',
+            'loklak' => '',
         );
         return $instance;
     }
