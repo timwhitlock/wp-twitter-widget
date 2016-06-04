@@ -22,14 +22,12 @@ Domain Path: /api/lang/
  */
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $loklak ){
     try {
-
         if( $loklak == true ){
-
             if( ! function_exists('hello') ){
                 require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
                 $loklak = new Loklak();
             }
-            // Build API params for "statuses/user_timeline" // https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
+            // Build API params for "search" for lolak.org/api/search.json?q=from:$user
             $trim_user = false;
             $include_rts = ! empty($rts);
             $exclude_replies = empty($ats);
@@ -94,8 +92,9 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $lokl
                 // render nice datetime, unless theme overrides with filter
                 $date = apply_filters( 'latest_tweets_render_date', $created_at );
                 if( $date === $created_at ){
+                    function_exists('twitter_api_relative_date') or twitter_api_include('utils');
                     $time = strtotime( $created_at );
-                    $date = date("F jS, Y g:i a", explode('+', $time)[0]); 
+                    $date = esc_html( twitter_api_relative_date($time) );
                     $date = '<time datetime="'.date_i18n( 'Y-m-d H:i:sO', $time ).'">'.$date.'</time>';
                 }
                 // handle original retweet text as RT may be truncated
@@ -106,7 +105,21 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $lokl
                 // render and linkify tweet, unless theme overrides with filter
                 $html = apply_filters('latest_tweets_render_text', $text );
                 if( $html === $text ){
-                    // TODO: render twitter like data
+                    if( ! function_exists('twitter_api_html') ){
+                        twitter_api_include('utils');
+                    }
+                    // htmlify tweet, using entities if we can
+                    if( isset($entities) && is_array($entities) ){
+                        $html = twitter_api_html_with_entities( $text, $entities );
+                        unset($entities);
+                    }
+                    else {
+                        $html = twitter_api_html( $text );
+                    }
+                    // render emoji, unless filtered out
+                    if( $emoji_callback ){
+                        $html = twitter_api_replace_emoji( $html, $emoji_callback );
+                    }
                 }
                 // piece together the whole tweet, allowing override
                 $final = apply_filters('latest_tweets_render_tweet', $html, $date, $link, $tweet );
