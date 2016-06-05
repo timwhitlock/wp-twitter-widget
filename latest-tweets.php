@@ -257,7 +257,7 @@ class Latest_Tweets_Widget extends WP_Widget {
             ),
             array (
                 'name'  => 'loklak',
-                'label' => __('Use Loklak API instead','twitter-api'),
+                'label' => __('Use anonymous API from loklak.org','twitter-api'),
                 'type'  => 'bool'
             ),
         );
