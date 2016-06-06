@@ -22,6 +22,7 @@ Domain Path: /api/lang/
  */
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $loklak ){
     try {
+        $loklak = get_option('loklak_api');
         if( $loklak ){
             if( ! function_exists('hello') ){
                 require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
@@ -255,11 +256,11 @@ class Latest_Tweets_Widget extends WP_Widget {
                 'label' => __('Show Replies','twitter-api'),
                 'type'  => 'bool'
             ),
-            array (
+            /*array (
                 'name'  => 'loklak',
                 'label' => __('Use anonymous API from loklak.org','twitter-api'),
                 'type'  => 'bool'
-            ),
+            ),*/
         );
         $name or $name = __('Latest Tweets','twitter-api');
         parent::__construct( $id_base, $name, $widget_options, $control_options );  
@@ -277,7 +278,7 @@ class Latest_Tweets_Widget extends WP_Widget {
             'pop' => 0,
             'rts' => '',
             'ats' => '',
-            'loklak' => '',
+            //'loklak' => '',
         );
         return $instance;
     }
