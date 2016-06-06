@@ -22,7 +22,7 @@ Domain Path: /api/lang/
  */
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $loklak ){
     try {
-        $loklak = get_option('loklak_api');
+        $loklak = get_option('loklak-settings[loklak_api]');
         if( $loklak ){
             if( ! function_exists('hello') ){
                 require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
@@ -351,6 +351,7 @@ if( is_admin() ){
 
     if( ! function_exists('hello') ){
         require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
+        require_once dirname(__FILE__).'/loklak_php_api/Lib/loklak-api-admin.php';
         $loklak = new Loklak();
     }
 
