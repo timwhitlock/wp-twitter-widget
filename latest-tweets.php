@@ -20,7 +20,7 @@ Domain Path: /api/lang/
  * @param bool whether to show at replies
  * @return array blocks of html expected by the widget
  */
-function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0, $loklak ){
+function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0){
     try {
         $loklak = get_option('loklak-settings[loklak_api]');
         if( $loklak ){
@@ -308,7 +308,7 @@ class Latest_Tweets_Widget extends WP_Widget {
         // title is themed via Wordpress widget theming techniques
         $title = $args['before_title'] . apply_filters('widget_title', $title, $instance, $this->id_base ) . $args['after_title'];
         // by default tweets are rendered as an unordered list
-        $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop, $loklak );
+        $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop);
         $list  = apply_filters('latest_tweets_render_list', $items, $screen_name );
         if( is_array($list) ){
             $list = '<ul><li>'.implode('</li><li>',$items).'</li></ul>';
