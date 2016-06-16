@@ -20,30 +20,41 @@ Domain Path: /api/lang/
  * @param bool whether to show at replies
  * @return array blocks of html expected by the widget
  */
-function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
+function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0){
     try {
-        if( ! function_exists('twitter_api_get') ){
-            require_once dirname(__FILE__).'/api/twitter-api.php';
-            twitter_api_load_textdomain();
-        }
-        // caching full data set, not just twitter api caching
-        // caching is disabled by default in debug mode, but still filtered.
-        $cachettl = (int) apply_filters('latest_tweets_cache_seconds', WP_DEBUG ? 0 : 300 );
-        if( $cachettl ){
-            $arguments = func_get_args();
-            $cachekey = 'latest_tweets_'.implode('_', $arguments );
-            if( ! function_exists('_twitter_api_cache_get') ){
-                twitter_api_include('core');
+        $loklak_api = get_option('loklak-settings[loklak_api]');
+        if( $loklak_api ){
+            if(!class_exists('Loklak')) {
+                require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
             }
-            if( $rendered = _twitter_api_cache_get($cachekey) ){
-                return $rendered;
+            $loklak = new Loklak();
+            $favorite_count = 'favourites_count';
+        }
+        else{
+            if( ! function_exists('twitter_api_get') ){
+                require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
+                twitter_api_load_textdomain();
+                $favorite_count = 'favorite_count';
+                // caching full data set, not just twitter api caching
+                // caching is disabled by default in debug mode, but still filtered.
+                $cachettl = (int) apply_filters('latest_tweets_cache_seconds', WP_DEBUG ? 0 : 300 );
+                if( $cachettl ){
+                    $arguments = func_get_args();
+                    $cachekey = 'latest_tweets_'.implode('_', $arguments );
+                    if( ! function_exists('_twitter_api_cache_get') ){
+                        twitter_api_include('core');
+                    }
+                    if( $rendered = _twitter_api_cache_get($cachekey) ){
+                        return $rendered;
+                    }
+                }
+                // Check configuration before use
+                if( ! twitter_api_configured() ){
+                    throw new Exception( __('Plugin not fully configured','twitter-api') );
+                }
             }
         }
-        // Check configuration before use
-        if( ! twitter_api_configured() ){
-            throw new Exception( __('Plugin not fully configured','twitter-api') );
-        }
-        // Build API params for "statuses/user_timeline" // https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline
+            // Build API params for "search" for lolak.org/api/search.json?q=from:$user
         $trim_user = false;
         $include_rts = ! empty($rts);
         $exclude_replies = empty($ats);
@@ -57,8 +68,18 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
             $params['count'] = max( $count, 2 );
         }
         // pull tweets until we either have enough, or there are no more
+        if( $loklak ){
+            $screen_name = explode('@', $screen_name)[1];
+            $batch = $loklak->search('', null, null, $screen_name, $count);
+            $batch = json_decode($batch, true);
+            $batch = json_decode($batch['body'], true); 
+            $batch = $batch['statuses'];
+        }
+        else{
+            $batch = twitter_api_get('statuses/user_timeline', $params );
+        }
         $tweets = array();
-        while( $batch = twitter_api_get('statuses/user_timeline', $params ) ){
+        while( $batch ){
             $max_id = null;
             foreach( $batch as $tweet ){
                 if( isset($params['max_id']) && $tweet['id_str'] === $params['max_id'] ){
@@ -70,7 +91,7 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
                     // skipping manual RT
                     continue;
                 }
-                if( $pop > ( $tweet['retweet_count'] + $tweet['favorite_count'] ) ){
+                if( $pop > ( $tweet['retweet_count'] + $tweet[$favorite_count] ) ){
                     // skipping tweets not deemed popular enough
                     continue;
                 }
@@ -131,10 +152,12 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
                 if( $emoji_callback ){
                     $html = twitter_api_replace_emoji( $html, $emoji_callback );
                 }
+                
                 // strip characters that will choke mysql cache.
-                if( $cachettl && ! TWITTER_CACHE_APC ){
+                if( !$loklak && $cachettl && ! TWITTER_CACHE_APC ){
                     $html = twitter_api_strip_quadruple_bytes( $html );
                 }
+                
             }
             // piece together the whole tweet, allowing override
             $final = apply_filters('latest_tweets_render_tweet', $html, $date, $link, $tweet );
@@ -143,9 +166,9 @@ function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0 ){
                          '<p class="tweet-details"><a href="'.$link.'" target="_blank">'.$date.'</a></p>';
             }
             $rendered[] = $final;
-        }
+        } 
         // cache rendered tweets
-        if( $cachettl ){
+        if( !$loklak && $cachettl ){
             _twitter_api_cache_set( $cachekey, $rendered, $cachettl );
         }
         // put altered timezone back
@@ -192,8 +215,14 @@ class Latest_Tweets_Widget extends WP_Widget {
     
     /** @see WP_Widget::__construct */
     public function __construct( $id_base = false, $name = '', $widget_options = array(), $control_options = array() ){
+
+        if(!class_exists('Loklak')) {
+            require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
+            $loklak = new Loklak();
+        }
+
         if( ! function_exists('twitter_api_load_textdomain') ){
-            require_once dirname(__FILE__).'/api/twitter-api.php';
+            require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
         }
         twitter_api_load_textdomain();
         $this->options = array(
@@ -227,6 +256,11 @@ class Latest_Tweets_Widget extends WP_Widget {
                 'label' => __('Show Replies','twitter-api'),
                 'type'  => 'bool'
             ),
+            /*array (
+                'name'  => 'loklak',
+                'label' => __('Use anonymous API from loklak.org','twitter-api'),
+                'type'  => 'bool'
+            ),*/
         );
         $name or $name = __('Latest Tweets','twitter-api');
         parent::__construct( $id_base, $name, $widget_options, $control_options );  
@@ -244,6 +278,7 @@ class Latest_Tweets_Widget extends WP_Widget {
             'pop' => 0,
             'rts' => '',
             'ats' => '',
+            //'loklak' => '',
         );
         return $instance;
     }
@@ -273,7 +308,7 @@ class Latest_Tweets_Widget extends WP_Widget {
         // title is themed via Wordpress widget theming techniques
         $title = $args['before_title'] . apply_filters('widget_title', $title, $instance, $this->id_base ) . $args['after_title'];
         // by default tweets are rendered as an unordered list
-        $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop );
+        $items = latest_tweets_render( $screen_name, $num, $rts, $ats, $pop);
         $list  = apply_filters('latest_tweets_render_list', $items, $screen_name );
         if( is_array($list) ){
             $list = '<ul><li>'.implode('</li><li>',$items).'</li></ul>';
@@ -287,7 +322,7 @@ class Latest_Tweets_Widget extends WP_Widget {
                 $list,
                 apply_filters( 'latest_tweets_render_after', '' ),
             '</div>',
-         $args['after_widget'];
+        $args['after_widget'];
     }
     
 }
@@ -313,8 +348,11 @@ add_shortcode( 'tweets', 'lastest_tweets_shortcode' );
 
 
 if( is_admin() ){
+
+    require_once dirname(__FILE__).'/loklak_php_api/Lib/loklak-api-admin.php';
+
     if( ! function_exists('twitter_api_get') ){
-        require_once dirname(__FILE__).'/api/twitter-api.php';
+        require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
     }
     // extra visibility of API settings link
     function latest_tweets_plugin_row_meta( $links, $file ){
