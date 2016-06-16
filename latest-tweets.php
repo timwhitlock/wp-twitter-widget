@@ -22,13 +22,13 @@ Domain Path: /api/lang/
  */
 function latest_tweets_render( $screen_name, $count, $rts, $ats, $pop = 0){
     try {
-        $loklak = get_option('loklak-settings[loklak_api]');
-        if( $loklak ){
-            if( ! function_exists('hello') ){
+        $loklak_api = get_option('loklak-settings[loklak_api]');
+        if( $loklak_api ){
+            if(!class_exists('Loklak')) {
                 require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
-                $loklak = new Loklak();
-                $favorite_count = 'favourites_count';
             }
+            $loklak = new Loklak();
+            $favorite_count = 'favourites_count';
         }
         else{
             if( ! function_exists('twitter_api_get') ){
@@ -216,7 +216,7 @@ class Latest_Tweets_Widget extends WP_Widget {
     /** @see WP_Widget::__construct */
     public function __construct( $id_base = false, $name = '', $widget_options = array(), $control_options = array() ){
 
-        if( ! function_exists('hello') ){
+        if(!class_exists('Loklak')) {
             require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
             $loklak = new Loklak();
         }
@@ -349,11 +349,7 @@ add_shortcode( 'tweets', 'lastest_tweets_shortcode' );
 
 if( is_admin() ){
 
-    if( ! function_exists('hello') ){
-        require_once dirname(__FILE__).'/loklak_php_api/loklak.php';
-        require_once dirname(__FILE__).'/loklak_php_api/Lib/loklak-api-admin.php';
-        $loklak = new Loklak();
-    }
+    require_once dirname(__FILE__).'/loklak_php_api/Lib/loklak-api-admin.php';
 
     if( ! function_exists('twitter_api_get') ){
         require_once dirname(__FILE__).'/api/wp-twitter-api/twitter-api.php';
