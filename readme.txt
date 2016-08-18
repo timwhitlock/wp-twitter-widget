@@ -1,10 +1,9 @@
 === Plugin Name ===
-Contributors: timwhitlock
-Donate link: http://timwhitlock.info/donate-to-a-project/
-Tags: twitter, tweets, oauth, api, rest, api, widget, sidebar
+Contributors: fossasia
+Tags: twitter, loklak, loklak api, tweets, oauth, api, rest, api, widget, sidebar
 Requires at least: 3.5.1
-Tested up to: 4.1.1
-Stable tag: 1.1.3
+Tested up to: 4.5.2
+Stable tag: 1.0 
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,16 +11,9 @@ Latest Tweets widget compatible with the new Twitter API 1.1
 
 == Description ==
 
-Connect your Twitter account to this plugin and the widget will display your latest tweets on your site.
+Use anonymous Loklak API OR Connect your Twitter account to this plugin and the widget will display your latest tweets on your site.
 
 This plugin is compatible with the new **Twitter API 1.1** and provides full **OAuth** authentication via the Wordpress admin area.
- 
-
-Built by <a href="//twitter.com/timwhitlock">@timwhitlock</a> / <a rel="author" href="https://plus.google.com/106703751121449519322">Tim Whitlock</a>
-
-The underlying Twitter API library is [available on Github](https://github.com/timwhitlock/wp-twitter-api)
-
-Also by this author: [Loco Translate](http://wordpress.org/plugins/loco-translate/)
 
 
 == Installation ==
@@ -29,7 +21,16 @@ Also by this author: [Loco Translate](http://wordpress.org/plugins/loco-translat
 1. Unzip all files to the `/wp-content/plugins/` directory
 2. Log into Wordpress admin and activate the 'Latest Tweets' plugin through the 'Plugins' menu
 
-Once the plugin is installed and enabled you can bind it to a Twitter account as follows:
+Once the plugin is installed and enabled you can use Loklak API or bind your plugin to a Twitter account as follows:
+
+**Use Loklak API**
+
+3. Tick the 'Loklak API' checkbox in API authentication settings.
+4. Click on 'Save settings'
+
+OR
+
+**Use Twitter 1.1 API**
 
 3. Register a Twitter application at https://dev.twitter.com/apps
 4. Note the Consumer key and Consumer secret under OAuth settings
@@ -54,7 +55,7 @@ See the 'Other Notes' tab for theming information.
 Because I'm providing code, not a service. If I set up a Twitter app for this plugin I'd be responsible for every person who uses it. 
 If Twitter closed my account or revoked my keys every instance of this plugin would break. Twitter also place limits on the number of users that can connect to a single app.
 
-= How I do know what my OAuth settings are? =
+= How I do know what my Twitter OAuth settings are? =
 
 These details are available in the [Twitter dashboard](https://dev.twitter.com/apps)
 
@@ -85,91 +86,8 @@ Yes, as of version 1.1.2 Emojis are rendered the same as on twitter.com. See the
 
 == Changelog ==
 
-= 1.1.3 =
-* Query string encoding fix
-* Added Spanish translations
-* Fixed missing text domain in date utils 
-
-= 1.1.2 =
-* Added Emoji image rendering
-
-= 1.1.1 =
-* broken release, don't use.
-
-= 1.1.0 =
-* Handling of truncated retweets
-* Restructured library directory
-* More friendly front end error when not configured
-* Caching disabled in debug mode
-* Empty timezone_string fix
-* Better tweet linkifying using entities
-* Better l10n bootstrapping
-* Added minimum tweet popularity
-
-= 1.0.15 =
-* Passing additional params to widget_title filter
-* Stripping four-byte Unicode sequences before wp cache inserts
-
-= 1.0.14 =
-* Timezone fixes
-* Fixed bad status link
-* Checking if APC disabled 
-* Added Dutch translations
-
-= 1.0.13 =
-* Added Russian translations
-* Fixed E_STRICT warning
-* Passing more arguments to filters including profile data
-
-= 1.0.12 =
-* Critical bug fix affecting some older versions of PHP
-
-= 1.0.11 =
-* Better fulfillment of tweet count when skipping retwteets and replies
-* Manual RTs now excluded when "Show Retweets" is disabled
-* Caching applies to rendered tweets instead of raw API data
-* Updated some German translations
-
-= 1.0.10 =
-* Added shortcode support
-* Fixed bug rendering url fragments as hashtags
-
-= 1.0.9 =
-* Fixed pluralisation bug in date printing
-* Now expanding t.co links unless render_text filter is used
-
-= 1.0.8 =
-* Added `latest_tweets_cache_seconds` filter
-* Added German translations
-
-= 1.0.7 =
-* Allow library coexist across plugins
-
-= 1.0.6 =
-* Enabled translations and added pt_BR
-* Switched dates to use i18n date formatter
-
-= 1.0.5 =
-* Moved widget title outside latest-tweets wrapper
-* Using WordPress 'transient' cache when APC not available 
-
-= 1.0.4 =
-* Library update fixes dates for old PHP versions 
-
-= 1.0.3 =
-* Added theme filters
-* Added configs for showing replies and RTs
-
-= 1.0.2 =
-* Fixed hook for PHP < 5.3
-
-= 1.0.1 =
-* First public release
-
-== Upgrade Notice ==
-
-= 1.1.3 =
-* Minor bug fixes and improvements
+= 1.0 =
+* A whole new version!
 
 
 == Shortcodes ==
@@ -179,7 +97,7 @@ You can embed tweets in the body of your posts using a Wordpress the shortcode `
 To specify a different user's timeline add the `user` attribute.  
 To override the default number of 5 tweets add the `max` attribute, e.g: 
 
-    [tweets max=10 user=timwhitlock]
+    [tweets max=10 user=KhoslaSopan]
 
 
 
