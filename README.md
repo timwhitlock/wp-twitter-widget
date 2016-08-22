@@ -1,24 +1,17 @@
-# Latest Tweets Wordpress Widget
+# Tweets Wordpress Widget
 
-Gitified version of the Latest Tweets Widget published in the official Wordpress plugin directory:  
-[http://wordpress.org/plugins/latest-tweets-widget/](http://wordpress.org/plugins/latest-tweets-widget/)
+Gitified version of the Tweets Widget published in the official Wordpress plugin directory:  
+[http://wordpress.org/plugins/tweets-widget/](http://wordpress.org/plugins/tweets-widget/)
 
 Please report issues in the Wordpress plugin directory support forum:  
-[http://wordpress.org/support/plugin/latest-tweets-widget](http://wordpress.org/support/plugin/latest-tweets-widget)
+[http://wordpress.org/support/plugin/tweets-widget](http://wordpress.org/support/plugin/tweets-widget)
 
 ## Installation
 
-Note that the actual name of the plugin is "latest-tweets-widget" not "wp-twitter-widget". It's renamed on Github to differentiate it as a Wordpress plugin. 
+Add the Loklak and Twitter APIs to this plugin via Git as follows:
 
-Add the plugin to your Wordpress project via Git as follows:
-
-    $ git submodule add https://github.com/timwhitlock/wp-twitter-widget.git \
-       wp-content/plugins/latest-tweets-widget
+    $ git submodule add https://github.com/timwhitlock/wp-twitter-api.git api
+    $ git submodule add https://github.com/loklak/loklak_php_api.git loklak_php_api
     
-If you want to use a stable release listed in the Wordpress plugin directory, you can checkout by tag, e.g.:
 
-    $ cd wp-content/plugins/latest-tweets-widget 
-    $ git fetch origin
-    $ git checkout tags/1.1.0
-
-For further details on the plugin, please visit the [official plugin page](http://wordpress.org/plugins/latest-tweets-widget/).
+For further details on the plugin, please visit the [official plugin page](http://wordpress.org/plugins/tweets-widget/).

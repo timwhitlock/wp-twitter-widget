@@ -7,7 +7,7 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Latest Tweets widget compatible with the new Twitter API 1.1
+Tweets Widget compatible with the new Twitter API 1.1
 
 == Description ==
 
@@ -19,7 +19,7 @@ This plugin is compatible with the new **Twitter API 1.1** and provides full **O
 == Installation ==
 
 1. Unzip all files to the `/wp-content/plugins/` directory
-2. Log into Wordpress admin and activate the 'Latest Tweets' plugin through the 'Plugins' menu
+2. Log into Wordpress admin and activate the 'Tweets' plugin through the 'Plugins' menu
 
 Once the plugin is installed and enabled you can use Loklak API or bind your plugin to a Twitter account as follows:
 
@@ -41,7 +41,7 @@ OR
 Once your site is authenticated you can configure the widget as follows:
 
 8. Log into Wordpress admin and go to Appearance > Widgets
-9. Drag 'Latest Tweets' from 'Available widgets' to where you want it. e.g. Main Sidebar
+9. Drag 'Tweets' from 'Available widgets' to where you want it. e.g. Main Sidebar
 10. Optionally configure the widget title and number of tweets to display.
 
 == Frequently Asked Questions ==
@@ -73,10 +73,6 @@ This is useful for only showing your most interesting content.
 If you're unable too fix your [PHP cURL](https://php.net/manual/en/book.curl.php) installation, you can disable SSL verification of twitter.com by adding this to your theme functions.php:  
 `add_filter('https_ssl_verify', '__return_false');`  
 Do so at your own risk.
-
-= Does this plugin show Emoji images in tweets? =
-
-Yes, as of version 1.1.2 Emojis are rendered the same as on twitter.com. See the [Other Notes](http://wordpress.org/plugins/latest-tweets-widget/other_notes/) section for how to disable Emoji.
 
 
 == Screenshots ==
@@ -113,28 +109,28 @@ This plugin contains no default CSS. That's deliberate, so you can style it how 
 
 Tweets are rendered as a list which has various hooks you can use. Here's a rough template:
 
-    .latest-tweets {
+    .tweets {
         /* style tweet list wrapper */
     }
-    .latest-tweets h3 {
+    .tweets h3 {
         /* style whatever you did with the header */
     }
-    .latest-tweets ul { 
+    .tweets ul { 
         /* style tweet list*/
     }
-    .latest-tweets li {
+    .tweets li {
        /* style tweet item */
     }
-    .latest-tweets .tweet-text {
+    .tweets .tweet-text {
        /* style main tweet text */
     }
-    .latest-tweets .tweet-text a {
+    .tweets .tweet-text a {
        /* style links, hashtags and mentions */
     }
-    .latest-tweets .tweet-text .emoji {
+    .tweets .tweet-text .emoji {
       /* style embedded emoji image in tweet */ 
     }
-    .latest-tweets .tweet-details {
+    .tweets .tweet-details {
       /* style datetime and link under tweet */
     }
 
@@ -143,30 +139,30 @@ Tweets are rendered as a list which has various hooks you can use. Here's a roug
 
 If you want to override the default markup of the tweets, the following filters are also available:
 
-* Add a header between the widget title and the tweets with `latest_tweets_render_before`
-* Perform your own rendering of the timestamp with `latest_tweets_render_date`
-* Render plain tweet text to your own HTML with `latest_tweets_render_text`
-* Render each composite tweet with `latest_tweets_render_tweet`
-* Override the unordered list for tweets with `latest_tweets_render_list` 
-* Add a footer before the end of the widget with `latest_tweets_render_after`
+* Add a header between the widget title and the tweets with `tweets_render_before`
+* Perform your own rendering of the timestamp with `tweets_render_date`
+* Render plain tweet text to your own HTML with `tweets_render_text`
+* Render each composite tweet with `tweets_render_tweet`
+* Override the unordered list for tweets with `tweets_render_list` 
+* Add a footer before the end of the widget with `tweets_render_after`
 
 Here's an **example** of using some of the above in your theme's functions.php file:
 
-    add_filter('latest_tweets_render_date', function( $created_at ){
+    add_filter('tweets_render_date', function( $created_at ){
         $date = DateTime::createFromFormat('D M d H:i:s O Y', $created_at );
         return $date->format('d M h:ia');
     }, 10 , 1 );
     
-    add_filter('latest_tweets_render_text', function( $text ){
+    add_filter('tweets_render_text', function( $text ){
         return $text; // <- will use default
     }, 10 , 1 );
     
-    add_filter('latest_tweets_render_tweet', function( $html, $date, $link, array $tweet ){
+    add_filter('tweets_render_tweet', function( $html, $date, $link, array $tweet ){
         $pic = $tweet['user']['profile_image_url_https'];
         return '<p class="my-tweet"><img src="'.$pic.'"/>'.$html.'</p><p class="my-date"><a href="'.$link.'">'.$date.'</a></p>';
     }, 10, 4 );
     
-    add_filter('latest_tweets_render_after', function(){
+    add_filter('tweets_render_after', function(){
         return '<footer><a href="https://twitter.com/me">More from me</a></footer>';
     }, 10, 0 );
 
@@ -176,17 +172,17 @@ Responses from the Twitter API are cached for 5 minutes by default. This means y
 
 This is deliberate not only for performance, but also to avoid Twitter's strict rate limits of 15 requests every 15 minutes. 
 
-You can override the 300 second cache by using the `latest_tweets_cache_seconds` filter in your theme as follows:
+You can override the 300 second cache by using the `tweets_cache_seconds` filter in your theme as follows:
 
 This would extend the cache to 1 minute, which is the lowest value you should consider using on a live site:
 
-    add_filter('latest_tweets_cache_seconds', function( $ttl ){
+    add_filter('tweets_cache_seconds', function( $ttl ){
         return 60;
     }, 10, 1 );
 
 This would disable the cache (not recommended other than for debugging):
 
-    add_filter('latest_tweets_cache_seconds', function( $ttl ){
+    add_filter('tweets_cache_seconds', function( $ttl ){
         return 0;
     }, 10, 1 );
 
@@ -195,13 +191,13 @@ This would disable the cache (not recommended other than for debugging):
 
 If you want to disable Emoji image replacement, you can filter the replacement callback function to something empty, e.g:
 
-    add_filter('latest_tweets_emoji_callback', function( $func ){
+    add_filter('tweets_emoji_callback', function( $func ){
         return '';
     } );
 
 - or to strip Emoji characters from all tweets, return your own replacement function that returns something else, e.g:
 
-    add_filter('latest_tweets_emoji_callback', function( $func ){
+    add_filter('tweets_emoji_callback', function( $func ){
         return function( array $match ){
             return '<!-- removed emoji -->';
         };
