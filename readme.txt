@@ -77,8 +77,9 @@ Do so at your own risk.
 
 == Screenshots ==
 
-1. Widget screen shows feed options
-2. Admin screen shows Twitter connect button and OAuth settings
+1. Tweets rendered via Loklak API
+2. Admin screen shows Loklak and Twitter API connect button and OAuth settings
+3. Widget screen shows feed options
 
 == Changelog ==
 
