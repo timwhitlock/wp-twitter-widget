@@ -1,7 +1,11 @@
-# Latest Tweets Wordpress Widget
+# NO LONGER MAINTAINED
 
-Gitified version of the Latest Tweets Widget published in the official Wordpress plugin directory:  
-[http://wordpress.org/plugins/latest-tweets-widget/](http://wordpress.org/plugins/latest-tweets-widget/)
+This was a mirror of the [latest-tweets-widget](https://wordpress.org/plugins/latest-tweets-widget/) plugin, which is now **closed**.
+It remains here for posterity only.
+
+---
+
+# Latest Tweets Wordpress Widget
 
 Please report issues in the Wordpress plugin directory support forum:  
 [http://wordpress.org/support/plugin/latest-tweets-widget](http://wordpress.org/support/plugin/latest-tweets-widget)
